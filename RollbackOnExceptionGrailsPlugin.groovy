@@ -47,7 +47,7 @@ Initiate rollback on any exception in a grails service marked as transactional.
             'org.codehaus.groovy.grails.commons.spring.TypeSpecifyableTransactionProxyFactoryBean') {
 
             def methodMatchingMap = ['*': new RollbackAlwaysTransactionAttribute()]
-            def source = new GroovyAwareNamedTransactionAttributeSource(methodMatchingMap)
+            def source = new GroovyAwareNamedTransactionAttributeSource(nameMap: methodMatchingMap)
 
             definition.propertyValues.addPropertyValue('transactionAttributeSource', source)
         }
