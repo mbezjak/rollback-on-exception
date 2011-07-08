@@ -1,7 +1,8 @@
 # rollback-on-exception
 Initiate rollback on any exception in a grails service marked as transactional.
 
-## Source code Source code is available at github:
+## Source code
+Source code is available at github:
 https://github.com/mbezjak/rollback-on-exception
 
 ## License
