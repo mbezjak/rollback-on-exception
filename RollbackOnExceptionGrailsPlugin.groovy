@@ -8,6 +8,10 @@ class RollbackOnExceptionGrailsPlugin {
 
     def version = "0.1"
     def grailsVersion = "1.3.4 > *"
+    def pluginExcludes = [
+        'grails-app/domain/test/Account.groovy',
+        'grails-app/services/test/AccountService.groovy'
+    ]
 
     def loadAfter = ['services']
     def observe = ['services']
