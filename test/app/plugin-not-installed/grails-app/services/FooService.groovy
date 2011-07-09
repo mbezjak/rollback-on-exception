@@ -17,4 +17,11 @@ class FooService {
         """
     }
 
+    void checked() {
+        new Foo(name: 'qux').save()
+        new Foo(name: 'quux').save()
+
+        throw new CheckedException()
+    }
+
 }

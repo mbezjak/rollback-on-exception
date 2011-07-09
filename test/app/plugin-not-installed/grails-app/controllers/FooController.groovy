@@ -9,7 +9,17 @@ class FooController {
         try {
             fooService.execute()
         } catch(e) {
-            GrailsUtil.sanitize(e).printStackTrace()
+            GrailsUtil.deepSanitize(e).printStackTrace()
+        }
+
+        render Foo.getAll() as XML
+    }
+
+    def checked = {
+        try {
+            fooService.checked()
+        } catch(e) {
+            GrailsUtil.deepSanitize(e).printStackTrace()
         }
 
         render Foo.getAll() as XML
