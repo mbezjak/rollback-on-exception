@@ -1,11 +1,11 @@
-/*.log*
-/*.zip
+*.log*
+*.zip
 
-/.classpath
-/.project
-/plugin.xml
+.classpath
+.project
+.settings/
+plugin.xml
+docs/
+target/
 
-/.settings/
-/docs/
 /web-app/
-/target/
