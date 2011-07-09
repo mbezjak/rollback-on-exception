@@ -13,7 +13,7 @@ class FooServiceSpec extends IntegrationSpec {
     FooService fooService
 
     def cleanup() {
-        Foo.getAll()*.delete(flush: true)
+        Foo.list()*.delete(flush: true)
     }
 
     def "should rollback on validation exception"() {

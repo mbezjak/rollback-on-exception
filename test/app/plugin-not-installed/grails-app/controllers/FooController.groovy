@@ -28,7 +28,7 @@ class FooController {
             GrailsUtil.deepSanitize(e).printStackTrace()
         }
 
-        render Foo.getAll() as XML
+        render Foo.list() as XML
     }
 
 }
