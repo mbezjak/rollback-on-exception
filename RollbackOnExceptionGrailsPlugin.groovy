@@ -29,7 +29,7 @@ Initiate rollback on any exception in a grails service marked as transactional.
 
     def onChange = { event ->
         if (event.source && event.ctx) {
-            def definition = fromChangeEventSource(source)
+            def definition = fromChangeEventSource(event.source)
             makeServiceMethodsRollbackOnAnyThrowable definition
         }
     }
