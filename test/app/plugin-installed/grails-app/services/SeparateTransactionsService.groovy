@@ -18,7 +18,10 @@ class SeparateTransactionsService {
         def last = sql.firstRow('select max(id) as last from foo').last
         sql.withTransaction {
             sql.execute 'insert into foo values (?, ?, ?)', [last + 1, 0, 'thud']
-            throw new SQLException('instead of sql.execute')
+            sql.execute """
+                Some sql statement that causes exception. This one isn't valid
+                sql so it always throws SQLException.
+            """
         }
     }
 
