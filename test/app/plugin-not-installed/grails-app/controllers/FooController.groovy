@@ -5,20 +5,20 @@ class FooController {
 
     FooService fooService
 
-    def execute = {
-        invokeTransactionalMethod { fooService.execute() }
-    }
-
-    def checked = {
-        invokeTransactionalMethod { fooService.checked() }
+    def validation = {
+        invokeTransactionalMethod { fooService.validation() }
     }
 
     def unchecked = {
         invokeTransactionalMethod { fooService.unchecked() }
     }
 
-    def validation = {
-        invokeTransactionalMethod { fooService.validation() }
+    def checked = {
+        invokeTransactionalMethod { fooService.checked() }
+    }
+
+    def execute = {
+        invokeTransactionalMethod { fooService.execute() }
     }
 
     private void invokeTransactionalMethod(Closure work) {

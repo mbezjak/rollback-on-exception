@@ -16,17 +16,25 @@ class FooServiceSpec extends IntegrationSpec {
         Foo.getAll()*.delete(flush: true)
     }
 
-    def "execute should rollback on SQLException"() {
+    def "should rollback on validation exception"() {
         when:
-        fooService.execute()
+        fooService.validation()
 
         then:
-        def e = thrown(UndeclaredThrowableException)
-        e.cause.getClass() == SQLException
+        thrown(ValidationException)
         Foo.count() == 0
     }
 
-    def "checked should rollback on checked exception"() {
+    def "should rollback on unchecked exception"() {
+        when:
+        fooService.unchecked()
+
+        then:
+        thrown(IllegalStateException)
+        Foo.count() == 0
+    }
+
+    def "should rollback on checked exception"() {
         when:
         fooService.checked()
 
@@ -36,21 +44,13 @@ class FooServiceSpec extends IntegrationSpec {
         Foo.count() == 0
     }
 
-    def "unchecked should rollback on unchecked exception"() {
+    def "should rollback on SQLException"() {
         when:
-        fooService.unchecked()
+        fooService.execute()
 
         then:
-        thrown(IllegalStateException)
-        Foo.count() == 0
-    }
-
-    def "validation should rollback on validation exception"() {
-        when:
-        fooService.validation()
-
-        then:
-        thrown(ValidationException)
+        def e = thrown(UndeclaredThrowableException)
+        e.cause.getClass() == SQLException
         Foo.count() == 0
     }
 
