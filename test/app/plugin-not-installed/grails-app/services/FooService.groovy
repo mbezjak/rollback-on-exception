@@ -31,4 +31,11 @@ class FooService {
         throw new IllegalStateException()
     }
 
+    void validation() {
+        new Foo(name: 'garply').save(failOnError: true, flush: true)
+
+        // name is not nullable
+        new Foo().save(failOnError: true, flush: true)
+    }
+
 }

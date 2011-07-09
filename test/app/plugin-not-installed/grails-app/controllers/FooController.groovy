@@ -35,4 +35,14 @@ class FooController {
         render Foo.getAll() as XML
     }
 
+    def validation = {
+        try {
+            fooService.validation()
+        } catch(e) {
+            GrailsUtil.deepSanitize(e).printStackTrace()
+        }
+
+        render Foo.getAll() as XML
+    }
+
 }

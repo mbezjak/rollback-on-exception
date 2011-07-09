@@ -1,6 +1,7 @@
 import java.lang.reflect.UndeclaredThrowableException
 import java.sql.SQLException
 
+import grails.validation.ValidationException
 import grails.plugin.spock.*
 import spock.lang.*
 
@@ -41,6 +42,15 @@ class FooServiceSpec extends IntegrationSpec {
 
         then:
         thrown(IllegalStateException)
+        Foo.count() == 0
+    }
+
+    def "validation should rollback on validation exception"() {
+        when:
+        fooService.validation()
+
+        then:
+        thrown(ValidationException)
         Foo.count() == 0
     }
 
