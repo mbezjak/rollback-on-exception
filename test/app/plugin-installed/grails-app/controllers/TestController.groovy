@@ -1,9 +1,10 @@
 import grails.util.GrailsUtil
 import grails.converters.XML
 
-class FooController {
+class TestController {
 
     FooService fooService
+    SeparateTransactionsService separateTransactionsService
 
     def validation = {
         invokeTransactionalMethod { fooService.validation() }
@@ -19,6 +20,14 @@ class FooController {
 
     def execute = {
         invokeTransactionalMethod { fooService.execute() }
+    }
+
+    def unproxied = {
+        invokeTransactionalMethod { fooService.unproxied() }
+    }
+
+    def separate = {
+        invokeTransactionalMethod { separateTransactionsService.separate() }
     }
 
     private void invokeTransactionalMethod(Closure work) {
