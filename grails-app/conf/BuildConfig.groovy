@@ -9,7 +9,6 @@ grails.project.dependency.resolution = {
     }
 
     plugins {
-        test ':hibernate:1.3.4'
         test ':spock:0.5-groovy-1.7'
     }
 
