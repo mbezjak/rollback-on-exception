@@ -1,7 +1,7 @@
 class UrlMappings {
-	static mappings = {
+    static mappings = {
 
-		"/$controller/$action?/$id?"()
+        "/$controller/$action?/$id?"()
 
-	}
+    }
 }
