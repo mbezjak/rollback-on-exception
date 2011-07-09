@@ -44,10 +44,10 @@ class FooService {
 ```
 
 This code will work as long as `sql.call` never fails. However it can fail due
-to: connection problems, row locking, duplicate record, procedure itself raises
-an exception or as simple as *someone-renamed-my-procedure* error. Whatever the
-case it fails with `java.sql.SQLException`. That is a checked exception. No
-transaction rollback will occur.
+to: row locking, duplicate record, procedure itself raises an exception,
+connection problems, replication or as simple as *someone-renamed-my-procedure*
+error. Whatever the case it fails with `java.sql.SQLException`. That is a
+checked exception. No transaction rollback will occur.
 
 Simple
 [google search](http://www.google.com/#q=grails+rollback+on+checked+exception)
