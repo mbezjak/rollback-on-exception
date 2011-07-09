@@ -38,8 +38,8 @@ class FooService {
     }
 
     void unproxied() {
-        new Foo(name: 'plugh').save(failOnError: true, flush: true)
-        new Foo(name: 'xyzzy').save(failOnError: true, flush: true)
+        new Foo(name: 'Im running out of').save(failOnError: true, flush: true)
+        new Foo(name: 'metasyntactic variables').save(failOnError: true, flush: true)
 
         def sql = new Sql(dataSourceUnproxied)
         def last = sql.firstRow('select max(id) as last from foo').last

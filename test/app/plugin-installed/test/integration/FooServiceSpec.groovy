@@ -62,7 +62,7 @@ class FooServiceSpec extends IntegrationSpec {
         def e = thrown(UndeclaredThrowableException)
         e.cause.getClass() == SQLException
         Foo.count() == 1
-        Foo.getAll()[0].name == 'thud'
+        Foo.list()[0].name == 'thud'
     }
 
 }
