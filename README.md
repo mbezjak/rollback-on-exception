@@ -44,8 +44,8 @@ class FooService {
 ```
 
 This code will work as long as `sql.call` never fails. However it can fail due
-to: row locking, duplicate record, procedure itself raises an exception,
-connection problems, replication or as simple as *someone-renamed-my-procedure*
+to: row lock, duplicate record, procedure itself raises an exception, connection
+problems, replication or as simple as *someone-renamed-my-procedure*
 error. Whatever the case it fails with `java.sql.SQLException`. That is a
 checked exception. No transaction rollback will occur.
 
