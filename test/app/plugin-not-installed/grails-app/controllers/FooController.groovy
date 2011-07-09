@@ -6,39 +6,25 @@ class FooController {
     FooService fooService
 
     def execute = {
-        try {
-            fooService.execute()
-        } catch(e) {
-            GrailsUtil.deepSanitize(e).printStackTrace()
-        }
-
-        render Foo.getAll() as XML
+        invokeTransactionalMethod { fooService.execute() }
     }
 
     def checked = {
-        try {
-            fooService.checked()
-        } catch(e) {
-            GrailsUtil.deepSanitize(e).printStackTrace()
-        }
-
-        render Foo.getAll() as XML
+        invokeTransactionalMethod { fooService.checked() }
     }
 
     def unchecked = {
-        try {
-            fooService.unchecked()
-        } catch(e) {
-            GrailsUtil.deepSanitize(e).printStackTrace()
-        }
-
-        render Foo.getAll() as XML
+        invokeTransactionalMethod { fooService.unchecked() }
     }
 
     def validation = {
+        invokeTransactionalMethod { fooService.validation() }
+    }
+
+    private void invokeTransactionalMethod(Closure work) {
         try {
-            fooService.validation()
-        } catch(e) {
+            work()
+        } catch (e) {
             GrailsUtil.deepSanitize(e).printStackTrace()
         }
 
