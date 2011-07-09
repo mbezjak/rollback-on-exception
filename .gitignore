@@ -9,3 +9,4 @@ docs/
 target/
 
 /web-app/
+/test/app/plugin-not-installed/web-app/WEB-INF/classes/
