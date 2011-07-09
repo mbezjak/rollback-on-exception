@@ -10,3 +10,4 @@ target/
 
 /web-app/
 /test/app/plugin-not-installed/web-app/WEB-INF/classes/
+/test/app/plugin-installed/web-app/WEB-INF/classes/

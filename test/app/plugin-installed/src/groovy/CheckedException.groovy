@@ -1,0 +1,1 @@
+class CheckedException extends Exception {}
