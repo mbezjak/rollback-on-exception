@@ -5,7 +5,7 @@ import grails.validation.ValidationException
 import grails.plugin.spock.*
 import spock.lang.*
 
-class FooServiceSpec extends IntegrationSpec {
+class AllSpec extends IntegrationSpec {
 
     // rely on transactional service
     static transactional = false
@@ -34,35 +34,24 @@ class FooServiceSpec extends IntegrationSpec {
         Foo.count() == 0
     }
 
-    def "should rollback on checked exception"() {
+    def "should not rollback on checked exception"() {
         when:
         fooService.checked()
 
         then:
         def e = thrown(UndeclaredThrowableException)
         e.cause.getClass() == CheckedException
-        Foo.count() == 0
+        Foo.count() == 2
     }
 
-    def "should rollback on SQLException"() {
+    def "should not rollback on SQLException"() {
         when:
         fooService.execute()
 
         then:
         def e = thrown(UndeclaredThrowableException)
         e.cause.getClass() == SQLException
-        Foo.count() == 0
-    }
-
-    def "using dataSourceUnproxied in a transactional method is a bad idea"() {
-        when:
-        fooService.unproxied()
-
-        then:
-        def e = thrown(UndeclaredThrowableException)
-        e.cause.getClass() == SQLException
-        Foo.count() == 1
-        Foo.list()[0].name == 'thud'
+        Foo.count() == 2
     }
 
 }
