@@ -22,6 +22,32 @@ in groovy. Groovy doesn't force you to catch checked exception. Herein lies a
 problem. If any code throws checked (that includes `java.sql.SQLException`)
 exception transaction does **not** rollback.
 
+## Example
+Suppose a grails service:
+
+```groovy
+import groovy.sql.Sql
+
+class FooService {
+
+    static transactional = true
+
+    Sql sql
+
+    def bar() {
+        model1.save()
+        model2.save()
+        sql.call 'execute procedure executing_inside_transaction_procedure'
+    }
+
+}
+```
+
+This code will work as long as `sql.call` never fails. However it can fail due
+to: connection problems, row locking, procedure itself raises an exception or as
+simple as *someone-renamed-my-procedure* error. Whatever the case it fails with
+`java.sql.SQLException`. That is a checked exception.
+
 ## Source code
 Source code is available at github:
 https://github.com/mbezjak/rollback-on-exception
