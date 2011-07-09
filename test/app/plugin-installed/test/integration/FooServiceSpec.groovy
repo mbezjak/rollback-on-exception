@@ -54,4 +54,15 @@ class FooServiceSpec extends IntegrationSpec {
         Foo.count() == 0
     }
 
+    def "using dataSourceUnproxied in a transactional method is a bad idea"() {
+        when:
+        fooService.unproxied()
+
+        then:
+        def e = thrown(UndeclaredThrowableException)
+        e.cause.getClass() == SQLException
+        Foo.count() == 1
+        Foo.getAll()[0].name == 'thud'
+    }
+
 }

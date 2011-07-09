@@ -21,6 +21,10 @@ class FooController {
         invokeTransactionalMethod { fooService.execute() }
     }
 
+    def unproxied = {
+        invokeTransactionalMethod { fooService.unproxied() }
+    }
+
     private void invokeTransactionalMethod(Closure work) {
         try {
             work()
