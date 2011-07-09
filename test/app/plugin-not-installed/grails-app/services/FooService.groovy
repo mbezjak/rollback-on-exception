@@ -24,4 +24,11 @@ class FooService {
         throw new CheckedException()
     }
 
+    void unchecked() {
+        new Foo(name: 'corge').save(failOnError: true, flush: true)
+        new Foo(name: 'grault').save(failOnError: true, flush: true)
+
+        throw new IllegalStateException()
+    }
+
 }

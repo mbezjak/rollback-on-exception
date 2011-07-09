@@ -35,4 +35,13 @@ class FooServiceSpec extends IntegrationSpec {
         Foo.count() == 2
     }
 
+    def "unchecked should rollback on unchecked exception"() {
+        when:
+        fooService.unchecked()
+
+        then:
+        thrown(IllegalStateException)
+        Foo.count() == 0
+    }
+
 }

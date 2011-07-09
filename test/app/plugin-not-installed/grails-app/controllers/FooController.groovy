@@ -25,4 +25,14 @@ class FooController {
         render Foo.getAll() as XML
     }
 
+    def unchecked = {
+        try {
+            fooService.unchecked()
+        } catch(e) {
+            GrailsUtil.deepSanitize(e).printStackTrace()
+        }
+
+        render Foo.getAll() as XML
+    }
+
 }
