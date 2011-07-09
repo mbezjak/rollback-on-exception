@@ -83,8 +83,7 @@ transactional = true` in service declaration.
 Instead of relying on hacks this plugin attacks problem head-on. By configuring
 spring to rollback on any exception (any `java.lang.Throwable` to be exact).
 
-Here are a couple of examples that will work as expected ones installing this
-plugin.
+Here are two examples that will work as expected ones installing this plugin.
 
 Example #1: `sql.executeInsert` can fail because of locking or duplicate record
 
@@ -131,6 +130,32 @@ class FooService {
 
 }
 ```
+
+## Install
+
+    grails install-plugin rollback-on-exception
+
+or add following line in *plugins* section in `grails-app/conf/BuildConfig.groovy`
+
+    ':rollback-on-exception:0.1'
+
+No additional configuration is required.
+
+## Upgrade
+
+    grails install-plugin rollback-on-exception
+
+or update version in `grails-app/conf/BuildConfig.groovy`
+
+## Uninstall
+
+    grails uninstall-plugin rollback-on-exception
+
+or remove line from `grails-app/conf/BuildConfig.groovy`
+
+## Configuration
+
+Currently plugin doesn't support any configuration.
 
 ## Source code
 Source code is available at github:
