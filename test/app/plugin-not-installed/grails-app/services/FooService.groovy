@@ -8,8 +8,8 @@ class FooService {
     DataSource dataSource
 
     void execute() {
-        new Foo(name: 'bar').save()
-        new Foo(name: 'baz').save()
+        new Foo(name: 'bar').save(failOnError: true, flush: true)
+        new Foo(name: 'baz').save(failOnError: true, flush: true)
 
         new Sql(dataSource).execute """
             Some sql statement that causes exception. This one isn't valid sql
@@ -18,8 +18,8 @@ class FooService {
     }
 
     void checked() {
-        new Foo(name: 'qux').save()
-        new Foo(name: 'quux').save()
+        new Foo(name: 'qux').save(failOnError: true, flush: true)
+        new Foo(name: 'quux').save(failOnError: true, flush: true)
 
         throw new CheckedException()
     }

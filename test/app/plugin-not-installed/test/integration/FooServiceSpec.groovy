@@ -12,7 +12,7 @@ class FooServiceSpec extends IntegrationSpec {
     FooService fooService
 
     def cleanup() {
-        Foo.getAll()*.delete()
+        Foo.getAll()*.delete(flush: true)
     }
 
     def "execute should not rollback on SQLException"() {
@@ -25,7 +25,7 @@ class FooServiceSpec extends IntegrationSpec {
         Foo.count() == 2
     }
 
-    def "execute should not rollback on checked exception"() {
+    def "checked should not rollback on checked exception"() {
         when:
         fooService.checked()
 
