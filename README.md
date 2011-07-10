@@ -83,7 +83,7 @@ transactional = true` in service declaration.
 Instead of relying on hacks this plugin attacks problem head-on. By configuring
 spring to rollback on any exception (any `java.lang.Throwable` to be exact).
 
-Here are two examples that will work as expected ones installing this plugin.
+Here are two examples that will work as expected once plugin is installed.
 
 Example #1: `sql.executeInsert` can fail because of locking or duplicate record
 
@@ -189,7 +189,7 @@ class FooService {
         model1.save()
         model2.save()
 
-        // transaction (#2): execute insert and procedure
+        // transaction (#2): execute procedure
         def sql = new Sql(dataSourceUnproxied)
         sql.call 'execute procedure foo'
     }
