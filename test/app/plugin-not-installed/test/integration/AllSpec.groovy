@@ -11,6 +11,7 @@ class AllSpec extends IntegrationSpec {
     static transactional = false
 
     TransactionalService transactionalService
+    NotTransactionalService notTransactionalService
 
     def cleanup() {
         Foo.list()*.delete(flush: true)
@@ -52,6 +53,30 @@ class AllSpec extends IntegrationSpec {
         def e = thrown(UndeclaredThrowableException)
         e.cause.getClass() == SQLException
         Foo.count() == 2
+    }
+
+    def "using dataSourceUnproxied in a transactional method is a bad idea"() {
+        when:
+        transactionalService.unproxied()
+
+        then:
+        def e = thrown(UndeclaredThrowableException)
+        e.cause.getClass() == SQLException
+        Foo.count() == 3
+        Foo.list()[0].name == 'xyz'
+        Foo.list()[1].name == 'zyx'
+        Foo.list()[2].name == 'thud'
+    }
+
+    def "correct way of using dataSourceUnproxied in separate transaction"() {
+        when:
+        notTransactionalService.separate()
+
+        then:
+        thrown(SQLException)
+        Foo.count() == 2
+        Foo.list()[0].name == 'plugh'
+        Foo.list()[1].name == 'xyzzy'
     }
 
 }
