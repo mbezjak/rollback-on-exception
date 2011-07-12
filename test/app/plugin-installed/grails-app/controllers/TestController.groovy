@@ -30,6 +30,10 @@ class TestController {
         invokeTransactionalMethod { notTransactionalService.separate() }
     }
 
+    def annotation = {
+        invokeTransactionalMethod { notTransactionalService.annotation() }
+    }
+
     private void invokeTransactionalMethod(Closure work) {
         try {
             work()
