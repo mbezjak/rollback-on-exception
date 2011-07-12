@@ -8,8 +8,4 @@ grails.project.dependency.resolution = {
         grailsCentral()
     }
 
-    plugins {
-        test ':spock:0.5-groovy-1.7'
-    }
-
 }
