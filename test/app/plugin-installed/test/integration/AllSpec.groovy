@@ -11,7 +11,7 @@ class AllSpec extends IntegrationSpec {
     static transactional = false
 
     TransactionalService transactionalService
-    SeparateTransactionsService separateTransactionsService
+    NotTransactionalService notTransactionalService
 
     def cleanup() {
         Foo.list()*.delete(flush: true)
@@ -68,7 +68,7 @@ class AllSpec extends IntegrationSpec {
 
     def "correct way of using dataSourceUnproxied in separate transaction"() {
         when:
-        separateTransactionsService.separate()
+        notTransactionalService.separate()
 
         then:
         thrown(SQLException)

@@ -2,7 +2,7 @@ import java.sql.SQLException
 import javax.sql.DataSource
 import groovy.sql.Sql
 
-class SeparateTransactionsService {
+class NotTransactionalService {
 
     static transactional = false
 

@@ -4,7 +4,7 @@ import grails.converters.XML
 class TestController {
 
     TransactionalService transactionalService
-    SeparateTransactionsService separateTransactionsService
+    NotTransactionalService notTransactionalService
 
     def validation = {
         invokeTransactionalMethod { transactionalService.validation() }
@@ -27,7 +27,7 @@ class TestController {
     }
 
     def separate = {
-        invokeTransactionalMethod { separateTransactionsService.separate() }
+        invokeTransactionalMethod { notTransactionalService.separate() }
     }
 
     private void invokeTransactionalMethod(Closure work) {
