@@ -34,6 +34,15 @@ class NotTransactionalService {
         executeSqlThatCausesException sql
     }
 
+    @Transactional
+    void annotationBare() {
+        new Foo(name: 'xxx').save(failOnError: true, flush: true)
+        new Foo(name: 'yyy').save(failOnError: true, flush: true)
+
+        def sql = new Sql(dataSource)
+        executeSqlThatCausesException sql
+    }
+
     private void executeSqlThatCausesException(Sql sql) {
         sql.execute """
             Some sql statement that causes exception. This one isn't valid sql

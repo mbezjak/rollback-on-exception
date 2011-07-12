@@ -34,6 +34,10 @@ class TestController {
         invokeTransactionalMethod { notTransactionalService.annotation() }
     }
 
+    def annotationBare = {
+            invokeTransactionalMethod { notTransactionalService.annotationBare() }
+    }
+    
     private void invokeTransactionalMethod(Closure work) {
         try {
             work()

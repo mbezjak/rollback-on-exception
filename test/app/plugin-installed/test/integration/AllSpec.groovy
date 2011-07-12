@@ -88,4 +88,16 @@ class AllSpec extends IntegrationSpec {
         Foo.count() == 0
     }
 
+    def "should not rollback if exception doesnt match one in rollbackFor"() {
+        when:
+        notTransactionalService.annotationBare()
+
+        then:
+        def e = thrown(UndeclaredThrowableException)
+        e.cause.getClass() == SQLException
+        Foo.count() == 2
+        Foo.list()[0].name == 'xxx'
+        Foo.list()[1].name == 'yyy'
+    }
+
 }
