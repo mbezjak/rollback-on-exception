@@ -98,6 +98,35 @@ easier to read. (2) It's also harder to unit test services having
 `withTransaction` block. (3) Moreover it's easier to forget to use suggested
 approach. Leading to bugs that are harder to track down.
 
+Another way would be to use `@Transactional` spring annotation:
+
+```groovy
+import javax.sql.DataSource
+import groovy.sql.Sql
+
+import org.springframework.transaction.annotation.Transactional
+
+class FooService {
+
+    // using @Transactional annotation instead
+    static transactional = false
+
+    DataSource dataSource
+
+    @Transactional(rollbackFor = Throwable)
+    def bar() {
+        model1.save()
+        model2.save()
+
+        def sql = new Sql(dataSource)
+        sql.call 'execute procedure that_runs_as_part_of_transactional_block'
+    }
+
+}
+```
+
+This solves problem (1) and (2) but not (3).
+
 *rollback-on-exception* plugin attacks problem head-on by configuring spring to
 rollback on any exception or error (any `java.lang.Throwable`).
 
