@@ -3,22 +3,22 @@ import grails.converters.XML
 
 class TestController {
 
-    FooService fooService
+    TransactionalService transactionalService
 
     def validation = {
-        invokeTransactionalMethod { fooService.validation() }
+        invokeTransactionalMethod { transactionalService.validation() }
     }
 
     def unchecked = {
-        invokeTransactionalMethod { fooService.unchecked() }
+        invokeTransactionalMethod { transactionalService.unchecked() }
     }
 
     def checked = {
-        invokeTransactionalMethod { fooService.checked() }
+        invokeTransactionalMethod { transactionalService.checked() }
     }
 
     def execute = {
-        invokeTransactionalMethod { fooService.execute() }
+        invokeTransactionalMethod { transactionalService.execute() }
     }
 
     private void invokeTransactionalMethod(Closure work) {

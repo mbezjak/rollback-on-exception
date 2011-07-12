@@ -1,7 +1,7 @@
 import javax.sql.DataSource
 import groovy.sql.Sql
 
-class FooService {
+class TransactionalService {
 
     static transactional = true
 

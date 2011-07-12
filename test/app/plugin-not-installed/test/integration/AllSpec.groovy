@@ -10,7 +10,7 @@ class AllSpec extends IntegrationSpec {
     // rely on transactional service
     static transactional = false
 
-    FooService fooService
+    TransactionalService transactionalService
 
     def cleanup() {
         Foo.list()*.delete(flush: true)
@@ -18,7 +18,7 @@ class AllSpec extends IntegrationSpec {
 
     def "should rollback on validation exception"() {
         when:
-        fooService.validation()
+        transactionalService.validation()
 
         then:
         thrown(ValidationException)
@@ -27,7 +27,7 @@ class AllSpec extends IntegrationSpec {
 
     def "should rollback on unchecked exception"() {
         when:
-        fooService.unchecked()
+        transactionalService.unchecked()
 
         then:
         thrown(IllegalStateException)
@@ -36,7 +36,7 @@ class AllSpec extends IntegrationSpec {
 
     def "should not rollback on checked exception"() {
         when:
-        fooService.checked()
+        transactionalService.checked()
 
         then:
         def e = thrown(UndeclaredThrowableException)
@@ -46,7 +46,7 @@ class AllSpec extends IntegrationSpec {
 
     def "should not rollback on SQLException"() {
         when:
-        fooService.execute()
+        transactionalService.execute()
 
         then:
         def e = thrown(UndeclaredThrowableException)
