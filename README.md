@@ -128,9 +128,8 @@ class FooService {
 This solves problem (1) and (2) but not (3).
 
 *rollback-on-exception* plugin attacks problem head-on by configuring spring to
-rollback on any exception or error (any `java.lang.Throwable`).
-
-Here are two examples that work as expected once plugin is installed.
+rollback on any exception or error (any `java.lang.Throwable`). Here are two
+examples that work as expected once plugin is installed.
 
 Example #1: `sql.executeInsert` can fail because of locks or duplicate record
 
