@@ -300,7 +300,38 @@ NOTE: Be aware that any use of `dataSourceUnproxied`, with or without this
 plugin, requires programmatic transactional management. Declaring `static
 transactional = true` doesn't work with `dataSourceUnproxied`. Acquired
 connection is being used outside of `HibernateTransactionManager`. Therefore use
-`sql.withTransaction` where necessary.
+of `sql.withTransaction` where necessary.
+
+## Compatibility with @Transactional
+Code that uses `@Transactional` annotations remains unchanged. Meaning that
+`rollbackFor` attribute is respected even after installing
+`rollback-on-exception`. For example, following code still rolls back only for
+`RuntimeException`, `Error` and `MyException`.
+
+```groovy
+import javax.sql.DataSource
+import groovy.sql.Sql
+
+import org.springframework.transaction.annotation.Transactional
+
+class FooService {
+
+    // using @Transactional annotation instead
+    static transactional = false
+
+    DataSource dataSource
+
+    @Transactional(rollbackFor = [RuntimeException, Error, MyException])
+    def bar() {
+        model1.save()
+        model2.save()
+
+        def sql = new Sql(dataSource)
+        sql.call 'execute procedure that_runs_as_part_of_transactional_block'
+    }
+
+}
+```
 
 ## Source code
 Source code is available at github:
