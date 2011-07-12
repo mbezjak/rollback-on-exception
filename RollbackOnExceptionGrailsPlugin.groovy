@@ -7,7 +7,7 @@ import hr.helix.transaction.RollbackAlwaysTransactionAttribute
 class RollbackOnExceptionGrailsPlugin {
 
     def version = "0.1"
-    def grailsVersion = "1.3.4 > *"
+    def grailsVersion = "1.3.2 > *"
 
     def loadAfter = ['services']
     def observe = ['services']
