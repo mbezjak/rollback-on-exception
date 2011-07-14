@@ -2,9 +2,10 @@
 Initiate rollback on any exception in a grails service marked as transactional.
 
 ## Terminology
-*Transactional* service includes any grails service (files in
- `grails-app/services`) not marked as `static transactional = false`. Remember
- that services are transactional by default.
+Grails services are classes located in `grails-app/services`
+directory. *Transactional* service includes any grails service **not** marked as
+`static transactional = false` or services with `@Transactional` annotation at
+class or method level. Remember that services are transactional by default.
 
 ## Rationale
 When service class is marked as transactional, grails uses spring to setup proxy
@@ -196,7 +197,7 @@ class InsufficientFundsException extends Exception {
 
 or add following line in *plugins* section in `grails-app/conf/BuildConfig.groovy`
 
-    // or other latest version number
+    // or use any other version number
     ':rollback-on-exception:0.1'
 
 No additional configuration is required.
