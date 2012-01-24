@@ -301,7 +301,7 @@ NOTE: Be aware that any use of `dataSourceUnproxied`, with or without this
 plugin, requires programmatic transactional management. Declaring `static
 transactional = true` doesn't work with `dataSourceUnproxied`. Acquired
 connection is being used outside of `HibernateTransactionManager`. Therefore use
-of `sql.withTransaction` where necessary.
+`sql.withTransaction` where necessary.
 
 ## Compatibility with @Transactional
 Code that uses `@Transactional` annotations remains unchanged. Meaning that
