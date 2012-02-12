@@ -338,5 +338,9 @@ class FooService {
 Source code is available at github:
 https://github.com/mbezjak/rollback-on-exception
 
+## Roadmap and changelog
+Roadmap and changelog are available at:
+https://github.com/mbezjak/rollback-on-exception/issues
+
 ## License
 Plugin uses MIT license. Check LICENSE.txt file for more info.
