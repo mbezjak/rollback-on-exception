@@ -2,10 +2,11 @@
 Initiate rollback on any exception in a grails service marked as transactional.
 
 ## Terminology
-Grails services are classes located in `grails-app/services`
-directory. *Transactional* service includes any grails service **not** marked as
-`static transactional = false` or services with `@Transactional` annotation at
-class or method level. Remember that services are transactional by default.
+Grails service (or simply service) is a Groovy class located in
+`grails-app/services` directory. *Transactional* service is any service **not**
+marked as `static transactional = false` or any service with `@Transactional`
+annotation at class or method level. Remember that a service is transactional by
+default.
 
 ## Rationale
 When service class is marked as transactional, grails uses spring to setup proxy
@@ -27,8 +28,11 @@ Things worth mentioning regarding spring's approach:
 It might make sense not to rollback on checked exceptions in Java but it doesn't
 in Groovy. Groovy doesn't force you to catch checked exceptions. Herein lies a
 problem. If any code throws checked exception (which includes
-`java.sql.SQLException`) transaction does **not** rollback. One commonly used
+`java.sql.SQLException`), transaction does **not** rollback. One commonly used
 class that can throw checked exception is `groovy.sql.Sql`.
+
+See further discussion on the matter at grails-user mail list post titled
+[Rolling back transactions on checked exceptions](http://grails.1312388.n4.nabble.com/Rolling-back-transactions-on-checked-exceptions-td4634494.html).
 
 ## Example
 Suppose a grails service:
@@ -54,12 +58,12 @@ class FooService {
 }
 ```
 
-This code works as long as `sql.call` never throws
-`java.sql.SQLException`. Valid reasons for throwing exception are: row or page
-lock, duplicate record, procedure raising exception, connection problems,
-replication or as simple as *someone-renamed-my-procedure* error. No matter what
-the reason is, `java.sql.SQLException` is a checked exception. No transaction
-rollback occurs under such circumstances.
+The code works for as long as `sql.call` never throws `java.sql.SQLException`.
+Valid reasons for throwing exception are: row or page lock, duplicate record,
+procedure raising exception, connection problems, replication or as simple as
+*someone-renamed-my-procedure* error. No matter what the reason is,
+`java.sql.SQLException` is checked exception. No transaction rollback occurs
+under such circumstance.
 
 Simple
 [google search](http://www.google.com/#q=grails+rollback+on+checked+exception)
@@ -93,13 +97,13 @@ Suggestion works because `withTransaction` method uses `TransactionTemplate`
 internally. `TransactionTemplate`, as stated before, rolls back on any exception
 or error.
 
-However such solution has a couple of downsides. (1) Declarative transaction
-approach feels much clearer then explicit one. Having fewer lines and being
-easier to read. (2) It's also harder to unit test services having
-`withTransaction` block. (3) Moreover it's easier to forget to use suggested
-approach. Leading to bugs that are harder to track down.
+However, the solution has a couple of downsides. (1) Declarative transaction
+approach is much clearer then explicit one - having fewer lines and being easier
+to read. (2) It's harder to unit test services having `withTransaction` block.
+(3) It's easy to forget to use suggested approach; leading to bugs that are hard
+to track down.
 
-Another way would be to use `@Transactional` spring annotation:
+Another solution could be to use `@Transactional` spring annotation:
 
 ```groovy
 import javax.sql.DataSource
@@ -130,7 +134,7 @@ This solves problem (1) and (2) but not (3).
 
 *rollback-on-exception* plugin attacks problem head-on by configuring spring to
 rollback on any exception or error (any `java.lang.Throwable`). Here are two
-examples that work as expected once plugin is installed.
+examples that work as expected once the plugin is installed.
 
 Example #1: `sql.executeInsert` can fail because of locks or duplicate record
 
@@ -185,7 +189,7 @@ class FooService {
 class InsufficientFundsException extends Exception {
 
     InsufficientFundsException(from, balance) {
-        super("$from account can't have negative balance but now has $balance")
+        super("$from account can't have negative balance but would have $balance")
     }
 
 }
@@ -195,10 +199,11 @@ class InsufficientFundsException extends Exception {
 
     grails install-plugin rollback-on-exception
 
-or add following line in *plugins* section in `grails-app/conf/BuildConfig.groovy`
+or add plugin declaration in `grails-app/conf/BuildConfig.groovy`
 
-    // or use any other version number
-    ':rollback-on-exception:0.1'
+    plugins {
+        runtime ':rollback-on-exception:0.1'
+    }
 
 No additional configuration is required.
 
@@ -206,7 +211,7 @@ No additional configuration is required.
 
     grails install-plugin rollback-on-exception
 
-or update version in `grails-app/conf/BuildConfig.groovy`
+or update plugin version in `grails-app/conf/BuildConfig.groovy`
 
 ## Uninstall
 
@@ -215,26 +220,22 @@ or update version in `grails-app/conf/BuildConfig.groovy`
 or remove plugin declaration from `grails-app/conf/BuildConfig.groovy`
 
 ## Configuration
-Currently plugin doesn't support any configuration.
+Currently, plugin doesn't support any configuration.
 
-## Impact on current code
-Plugin shouldn't drastically impact your existing code. Only spring beans of
-type
+## Impact on Current Code
+Plugin shouldn't drastically impact existing code. Only spring beans of type
 `org.codehaus.groovy.grails.commons.spring.TypeSpecifyableTransactionProxyFactoryBean`
 are altered. This generally only includes transactional services. Services are
-configured to rollback on any throwable instead of committing
-transaction. Service configuration happens at boot time - when web application
-is starting.
+configured to rollback on any throwable instead of committing transaction.
+Service configuration happens at boot time - when web application is starting.
 
 There is one situation where installing *rollback-on-exception* plugin can
 impact your code in a bad way. Although it is a bad code from the start! Don't
 code like this. This example is an anti pattern. You have been warned.
 
-Suppose service is transactional and has five methods. Four of which are normal
-transactional methods. But one is quasi transactional. That is, it needs to
-execute one peace as part of transaction #1 then other peace as part of
-transaction #2. One might be tempted to use `dataSourceUnproxied` to achieve
-this. Example code:
+Suppose a transactional service with one method. This method needs to execute
+one peace as part of transaction #1, then other peace as part of transaction #2.
+One might be tempted to use `dataSourceUnproxied` to achieve this. Example code:
 
 ```groovy
 import javax.sql.DataSource
@@ -259,18 +260,19 @@ class FooService {
 }
 ```
 
-Now, without this plugin installed this code actually works. Even though code is
-convoluted there are actually two transactions here. Saving models uses
+Without *rollback-on-exception* installed, this code actually works. Even though
+the code is convoluted, there are two transactions here. Saving models uses
 connection acquired by hibernate. Executing procedure uses `dataSourceUnproxied`
-which returns a separate connection. Two connections -> two transactions. It
+that returns a separate connection. Two connections -> two transactions. It
 works. Life is good. You move on.
 
-Until the day *rollback-on-exception* is installed. Then it starts breaking. On
-some occasions. When `sql.call` fails it throws `SQLException`. A checked
-exception. With this plugin transaction #1 rolls back. It wouldn't otherwise
-because that is spring's defaults. But correct way would be not to use
-transactional service if you need separate transactions. This is what correctly
-written example looks like:
+Until the day *rollback-on-exception* is installed. Then it starts breaking. In
+situations when `sql.call` fails, it throws `java.sql.SQLException`. A checked
+exception. With *rollback-on-exception* transaction #1 rolls back. It wouldn't
+otherwise because of spring's defaults - no rollback for checked exceptions.
+However, correct implementation wouldn't use declarative transactions when
+separate transactions are required. This is what correctly written example looks
+like:
 
 ```groovy
 import javax.sql.DataSource
@@ -300,13 +302,13 @@ class FooService {
 NOTE: Be aware that any use of `dataSourceUnproxied`, with or without this
 plugin, requires programmatic transactional management. Declaring `static
 transactional = true` doesn't work with `dataSourceUnproxied`. Acquired
-connection is being used outside of `HibernateTransactionManager`. Therefore use
-`sql.withTransaction` where necessary.
+connection is being used outside of `HibernateTransactionManager`. Therefore,
+use `sql.withTransaction` where necessary.
 
 ## Compatibility with @Transactional
-Code that uses `@Transactional` annotations remains unchanged. Meaning that
+Code that uses `@Transactional` annotations remains unchanged. Meaning of
 `rollbackFor` attribute is respected even after installing
-`rollback-on-exception`. For example, following code still rolls back only for
+*rollback-on-exception*. For example, following code still rolls back only for
 `RuntimeException`, `Error` and `MyException`.
 
 ```groovy
@@ -334,13 +336,8 @@ class FooService {
 }
 ```
 
-## Source code
-Source code is available at github:
-https://github.com/mbezjak/rollback-on-exception
+## Further Resources
 
-## Roadmap and changelog
-Roadmap and changelog are available at:
-https://github.com/mbezjak/rollback-on-exception/issues
-
-## License
-Plugin uses MIT license. Check LICENSE.txt file for more info.
+ * Homepage:       https://github.com/mbezjak/rollback-on-exception
+ * Issue tracker:  https://github.com/mbezjak/rollback-on-exception/issues
+ * License:        MIT (see LICENSE.txt file)
