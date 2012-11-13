@@ -341,4 +341,5 @@ class FooService {
  * Homepage:   https://github.com/mbezjak/rollback-on-exception
  * Issues:     https://github.com/mbezjak/rollback-on-exception/issues
  * Changelog:  see Changelog.md file
+ * Roadmap:    see Roadmap.md file
  * License:    MIT (see LICENSE.txt file)
