@@ -9,8 +9,9 @@ version="$1"
 }
 
 cat <<EOF
-(1) update install section version in README.md
-(2) update version in plugin descriptor
+(1) add Changelog.md entry
+(2) update install section version in README.md
+(3) update version in plugin descriptor
 
 Press enter for plugin release, ctrl + c to cancel
 EOF

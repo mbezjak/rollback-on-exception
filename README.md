@@ -338,6 +338,7 @@ class FooService {
 
 ## Further Resources
 
- * Homepage:       https://github.com/mbezjak/rollback-on-exception
- * Issue tracker:  https://github.com/mbezjak/rollback-on-exception/issues
- * License:        MIT (see LICENSE.txt file)
+ * Homepage:   https://github.com/mbezjak/rollback-on-exception
+ * Issues:     https://github.com/mbezjak/rollback-on-exception/issues
+ * Changelog:  see Changelog.md file
+ * License:    MIT (see LICENSE.txt file)
