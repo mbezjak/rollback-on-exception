@@ -98,7 +98,7 @@ internally. `TransactionTemplate`, as stated before, rolls back on any exception
 or error.
 
 However, the solution has a couple of downsides. (1) Declarative transaction
-approach is much clearer then explicit one - having fewer lines and being easier
+approach is much clearer than explicit one - having fewer lines and being easier
 to read. (2) It's harder to unit test services having `withTransaction` block.
 (3) It's easy to forget to use suggested approach; leading to bugs that are hard
 to track down.
