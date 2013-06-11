@@ -35,7 +35,7 @@ class TestController {
     }
 
     def annotationBare = {
-            invokeTransactionalMethod { notTransactionalService.annotationBare() }
+        invokeTransactionalMethod { notTransactionalService.annotationBare() }
     }
     
     private void invokeTransactionalMethod(Closure work) {
