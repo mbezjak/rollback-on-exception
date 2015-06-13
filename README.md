@@ -5,8 +5,8 @@ Initiate rollback on any exception in a grails service marked as transactional.
 Grails service (or simply service) is a Groovy class located in
 `grails-app/services` directory. *Transactional* service is any service **not**
 marked as `static transactional = false` or any service with `@Transactional`
-annotation at class or method level. Remember that a service is transactional by
-default.
+annotation at class or method level. Remember that grails services are
+transactional by default.
 
 ## Rationale
 When service class is marked as transactional, grails uses spring to setup proxy
