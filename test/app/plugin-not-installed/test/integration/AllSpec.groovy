@@ -74,6 +74,16 @@ class AllSpec extends Specification {
         Foo.list(sort: 'id')*.name == ['plugh', 'xyzzy']
     }
 
+    def "Domain.withTransaction will not rollback on SQLException"() {
+        when:
+        notTransactionalService.domainWithTransaction()
+
+        then:
+        def e = thrown(UndeclaredThrowableException)
+        e.cause instanceof SQLException
+        Foo.count() == 2
+    }
+
     def "should rollback if transactional annotation defines rollbackFor"() {
         when:
         notTransactionalService.annotation()

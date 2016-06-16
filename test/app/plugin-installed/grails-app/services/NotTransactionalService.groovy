@@ -25,6 +25,16 @@ class NotTransactionalService {
         }
     }
 
+    void domainWithTransaction() {
+        Foo.withTransaction {
+            new Foo(name: 'plugh').save(failOnError: true, flush: true)
+            new Foo(name: 'xyzzy').save(failOnError: true, flush: true)
+
+            def sql = new Sql(dataSource)
+            executeSqlThatCausesException sql
+        }
+    }
+
     @Transactional(rollbackFor = Throwable)
     void annotation() {
         new Foo(name: 'xyz').save(failOnError: true, flush: true)

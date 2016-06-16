@@ -30,6 +30,10 @@ class TestController {
         invokeTransactionalMethod { notTransactionalService.separate() }
     }
 
+    def domainWithTransaction() {
+        invokeTransactionalMethod { notTransactionalService.domainWithTransaction() }
+    }
+
     def annotation() {
         invokeTransactionalMethod { notTransactionalService.annotation() }
     }
