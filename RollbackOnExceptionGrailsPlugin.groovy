@@ -16,7 +16,7 @@ class RollbackOnExceptionGrailsPlugin {
     def title = "Rollback on exception"
     def author = "Miro Bezjak"
     def authorEmail = "miro.bezjak@helix.hr"
-    def description = 'Initiate rollback on any throwable when inside transactional context.'
+    def description = 'Initiate rollback on any throwable when inside a transactional context.'
     def documentation = "https://github.com/mbezjak/rollback-on-exception"
     def scm = [ url: 'https://github.com/mbezjak/rollback-on-exception' ]
 

@@ -1,5 +1,5 @@
 ## Summary
-Initiate rollback on any exception in a grails service marked as transactional.
+Initiate rollback on any throwable when inside a transactional context.
 
 ## Terminology
 Grails service (or simply service) is a Groovy class located in
@@ -65,45 +65,7 @@ procedure raising exception, connection problems, replication or as simple as
 `java.sql.SQLException` is checked exception. No transaction rollback occurs
 under such circumstance.
 
-Simple
-[google search](http://www.google.com/#q=grails+rollback+on+checked+exception)
-suggests using `withTransaction` method:
-
-```groovy
-import javax.sql.DataSource
-import groovy.sql.Sql
-
-class FooService {
-
-    // using manual withTransaction block instead
-    static transactional = false
-
-    DataSource dataSource
-
-    def bar() {
-        Domain.withTransaction {
-            model1.save()
-            model2.save()
-
-            def sql = new Sql(dataSource)
-            sql.call 'execute procedure that_runs_as_part_of_transactional_block'
-        }
-    }
-
-}
-```
-
-Suggestion works because `withTransaction` method uses `TransactionTemplate`
-internally. `TransactionTemplate`, as stated before, rolls back on any exception
-or error.
-
-However, the solution has a couple of downsides. (1) Declarative transaction
-approach is much clearer than explicit one - having fewer lines and being easier
-to read. (2) It's harder to unit test services having `withTransaction` block.
-(3) It's easy to forget to use suggested approach; leading to bugs that are hard
-to track down.
-
-Another solution could be to use `@Transactional` spring annotation:
+One solution could be to use `@Transactional` spring annotation:
 
 ```groovy
 import javax.sql.DataSource
@@ -130,7 +92,9 @@ class FooService {
 }
 ```
 
-This solves problem (1) and (2) but not (3).
+This solution has a big problem though. It's easy to forget to use suggested
+approach; leading to bugs that very hard to track down. You might notice it in
+production - when it's far too late (I did).
 
 *rollback-on-exception* plugin attacks problem head-on by configuring spring to
 rollback on any exception or error (any `java.lang.Throwable`). Here are two
@@ -196,10 +160,7 @@ class InsufficientFundsException extends Exception {
 ```
 
 ## Install
-
-    grails install-plugin rollback-on-exception
-
-or add plugin declaration in `grails-app/conf/BuildConfig.groovy`
+Add to `grails-app/conf/BuildConfig.groovy`:
 
     plugins {
         runtime ':rollback-on-exception:0.1'
@@ -207,17 +168,8 @@ or add plugin declaration in `grails-app/conf/BuildConfig.groovy`
 
 No additional configuration is required.
 
-## Upgrade
-
-    grails install-plugin rollback-on-exception
-
-or update plugin version in `grails-app/conf/BuildConfig.groovy`
-
 ## Uninstall
-
-    grails uninstall-plugin rollback-on-exception
-
-or remove plugin declaration from `grails-app/conf/BuildConfig.groovy`
+Remove `rollback-on-exception` line in `grails-app/conf/BuildConfig.groovy`.
 
 ## Configuration
 Currently, plugin doesn't support any configuration.
@@ -229,75 +181,8 @@ are altered. This generally only includes transactional services. Services are
 configured to rollback on any throwable instead of committing transaction.
 Service configuration happens at boot time - when web application is starting.
 
-There is one situation where installing *rollback-on-exception* plugin can
-impact your code in a bad way. Although it is a bad code from the start! Don't
-code like this. This example is an anti pattern. You have been warned.
-
-Suppose a transactional service with one method. This method needs to execute
-one peace as part of transaction #1, then other peace as part of transaction #2.
-One might be tempted to use `dataSourceUnproxied` to achieve this. Example code:
-
-```groovy
-import javax.sql.DataSource
-
-class FooService {
-
-    static transactional = true
-
-    DataSource dataSourceUnproxied
-
-    def bar() {
-        // transaction (#1): save models
-        model1.save()
-        model2.save()
-
-        // implicit transaction (#2): execute procedure
-        def sql = new Sql(dataSourceUnproxied)
-        // no explicit transaction block but it executes in it's own transaction
-        sql.call 'execute procedure foo'
-    }
-
-}
-```
-
-Without *rollback-on-exception* installed, this code actually works. Even though
-the code is convoluted, there are two transactions here. Saving models uses
-connection acquired by hibernate. Executing procedure uses `dataSourceUnproxied`
-that returns a separate connection. Two connections -> two transactions. It
-works. Life is good. You move on.
-
-Until the day *rollback-on-exception* is installed. Then it starts breaking. In
-situations when `sql.call` fails, it throws `java.sql.SQLException`. A checked
-exception. With *rollback-on-exception* transaction #1 rolls back. It wouldn't
-otherwise because of spring's defaults - no rollback for checked exceptions.
-However, correct implementation wouldn't use declarative transactions when
-separate transactions are required. This is what correctly written example looks
-like:
-
-```groovy
-import javax.sql.DataSource
-
-class FooService {
-
-    // use transactions programmatically instead of declaratively
-    static transactional = false
-
-    DataSource dataSourceUnproxied
-
-    def bar() {
-        // transaction (#1): save models
-        Domain.withTransaction {
-            model1.save()
-            model2.save()
-        }
-
-        // implicit transaction (#2): execute procedure
-        def sql = new Sql(dataSourceUnproxied)
-        sql.call 'execute procedure foo'
-    }
-
-}
-```
+Additionally `GrailsTransactionAttribute` is overriden to make sure
+`Domain.withTransaction` behaves as expected.
 
 NOTE: Be aware that any use of `dataSourceUnproxied`, with or without this
 plugin, requires programmatic transactional management. Declaring `static
