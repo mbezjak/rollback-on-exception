@@ -21,6 +21,6 @@ git tag "$version"
 git push
 git push --tags
 
-grails release-plugin --zipOnly --message="RELEASE $version"
+grails publish-plugin
 
 exit 0

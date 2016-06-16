@@ -2,10 +2,9 @@ import java.lang.reflect.UndeclaredThrowableException
 import java.sql.SQLException
 
 import grails.validation.ValidationException
-import grails.plugin.spock.*
 import spock.lang.*
 
-class AllSpec extends IntegrationSpec {
+class AllSpec extends Specification {
 
     // rely on transactional service
     static transactional = false
@@ -51,7 +50,7 @@ class AllSpec extends IntegrationSpec {
 
         then:
         def e = thrown(UndeclaredThrowableException)
-        e.cause.getClass() == SQLException
+        e.cause instanceof SQLException
         Foo.count() == 2
     }
 
@@ -61,11 +60,8 @@ class AllSpec extends IntegrationSpec {
 
         then:
         def e = thrown(UndeclaredThrowableException)
-        e.cause.getClass() == SQLException
-        Foo.count() == 3
-        Foo.list()[0].name == 'xyz'
-        Foo.list()[1].name == 'zyx'
-        Foo.list()[2].name == 'thud'
+        e.cause instanceof SQLException
+        Foo.list(sort: 'id')*.name == ['xyz', 'zyx', 'thud']
     }
 
     def "correct way of using dataSourceUnproxied in separate transaction"() {
@@ -74,10 +70,8 @@ class AllSpec extends IntegrationSpec {
 
         then:
         def e = thrown(UndeclaredThrowableException)
-        e.cause.getClass() == SQLException
-        Foo.count() == 2
-        Foo.list()[0].name == 'plugh'
-        Foo.list()[1].name == 'xyzzy'
+        e.cause instanceof SQLException
+        Foo.list(sort: 'id')*.name == ['plugh', 'xyzzy']
     }
 
     def "should rollback if transactional annotation defines rollbackFor"() {
@@ -86,7 +80,7 @@ class AllSpec extends IntegrationSpec {
 
         then:
         def e = thrown(UndeclaredThrowableException)
-        e.cause.getClass() == SQLException
+        e.cause instanceof SQLException
         Foo.count() == 0
     }
 
@@ -96,10 +90,8 @@ class AllSpec extends IntegrationSpec {
 
         then:
         def e = thrown(UndeclaredThrowableException)
-        e.cause.getClass() == SQLException
-        Foo.count() == 2
-        Foo.list()[0].name == 'xxx'
-        Foo.list()[1].name == 'yyy'
+        e.cause instanceof SQLException
+        Foo.list(sort: 'id')*.name == ['xxx', 'yyy']
     }
 
 }

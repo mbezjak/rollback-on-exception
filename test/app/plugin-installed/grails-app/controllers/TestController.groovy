@@ -6,38 +6,38 @@ class TestController {
     TransactionalService transactionalService
     NotTransactionalService notTransactionalService
 
-    def validation = {
+    def validation() {
         invokeTransactionalMethod { transactionalService.validation() }
     }
 
-    def unchecked = {
+    def unchecked() {
         invokeTransactionalMethod { transactionalService.unchecked() }
     }
 
-    def checked = {
+    def checked() {
         invokeTransactionalMethod { transactionalService.checked() }
     }
 
-    def execute = {
+    def execute() {
         invokeTransactionalMethod { transactionalService.execute() }
     }
 
-    def unproxied = {
+    def unproxied() {
         invokeTransactionalMethod { transactionalService.unproxied() }
     }
 
-    def separate = {
+    def separate() {
         invokeTransactionalMethod { notTransactionalService.separate() }
     }
 
-    def annotation = {
+    def annotation() {
         invokeTransactionalMethod { notTransactionalService.annotation() }
     }
 
-    def annotationBare = {
+    def annotationBare() {
         invokeTransactionalMethod { notTransactionalService.annotationBare() }
     }
-    
+
     private void invokeTransactionalMethod(Closure work) {
         try {
             work()

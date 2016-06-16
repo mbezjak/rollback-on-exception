@@ -7,19 +7,18 @@ import hr.helix.transaction.RollbackAlwaysTransactionAttribute
 class RollbackOnExceptionGrailsPlugin {
 
     def version = "0.1"
-    def grailsVersion = "1.3.2 > *"
+    def grailsVersion = "2.5 > *"
 
     def loadAfter = ['services']
     def observe = ['services']
     def watchedResources = [ 'file:./grails-app/services/*Service.groovy' ]
 
+    def title = "Rollback on exception"
     def author = "Miro Bezjak"
     def authorEmail = "miro.bezjak@helix.hr"
-    def title = "Rollback on exception"
-    def description = '''\\
-Initiate rollback on any exception in a grails service marked as transactional.
-'''
+    def description = 'Initiate rollback on any throwable when inside transactional context.'
     def documentation = "https://github.com/mbezjak/rollback-on-exception"
+    def scm = [ url: 'https://github.com/mbezjak/rollback-on-exception' ]
 
     def doWithSpring = {
         beanDefinitions.each { name, definition ->

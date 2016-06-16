@@ -42,7 +42,7 @@ class TransactionalService {
         new Foo(name: 'zyx').save(failOnError: true, flush: true)
 
         def sql = new Sql(dataSourceUnproxied)
-        def last = sql.firstRow('select max(id) as last from foo').last
+        def last = Foo.list()*.id.max()
         sql.execute 'insert into foo values (?, ?, ?)', [last + 1, 0, 'thud']
         executeSqlThatCausesException sql
     }

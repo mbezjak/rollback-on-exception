@@ -1,8 +1,9 @@
 dataSource {
     pooled = true
-    driverClassName = 'org.hsqldb.jdbcDriver'
+    driverClassName = 'org.h2.Driver'
     dbCreate = 'create-drop'
-    url = 'jdbc:hsqldb:mem:test'
+    url = "jdbc:h2:mem:testDb;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE"
     username = 'sa'
     password = ''
 }
+

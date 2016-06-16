@@ -6,7 +6,7 @@ set -o errexit
 base="$PWD"
 run-tests() {
   cd "$base/$1"
-  grails test-app
+  ./grailsw test-app
 }
 
 run-tests .

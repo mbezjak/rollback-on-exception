@@ -2,10 +2,9 @@ package hr.helix.transaction
 
 import java.sql.SQLException
 
-import grails.plugin.spock.*
 import spock.lang.*
 
-class RollbackAlwaysTransactionAttributeSpec extends UnitSpec {
+class RollbackAlwaysTransactionAttributeSpec extends Specification {
 
     @Unroll("'#e' should suggest transaction rollback")
     def "rollbackOn should suggest rollback for any kind of throwable"() {
