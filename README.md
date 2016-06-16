@@ -162,7 +162,7 @@ class InsufficientFundsException extends Exception {
 ## Install
 
 * for grails 1.x use version `0.1`
-* for grails 2.x use version `0.2`
+* for grails 2.5+ use version `0.2`
 * there is currently no support for grails 3.x
 
 Add to `grails-app/conf/BuildConfig.groovy`:
