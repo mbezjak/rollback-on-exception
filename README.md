@@ -168,7 +168,7 @@ class InsufficientFundsException extends Exception {
 Add to `grails-app/conf/BuildConfig.groovy`:
 
     plugins {
-        runtime ':rollback-on-exception:0.1'
+        runtime ':rollback-on-exception:0.2'
     }
 
 No additional configuration is required.
